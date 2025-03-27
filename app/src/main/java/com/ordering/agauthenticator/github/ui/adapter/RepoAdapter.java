@@ -6,12 +6,14 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ordering.agauthenticator.ApplicationHelper;
 import com.ordering.agauthenticator.databinding.ItemRepooBinding;
 import com.ordering.agauthenticator.github.db.GithubModel;
 import com.ordering.agauthenticator.github.ui.fragment.DetailFragment;
+import com.ordering.agauthenticator.github.viewmodel.GithubViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,10 +36,9 @@ public class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.RepoViewHolder
     public void onBindViewHolder(@NonNull RepoViewHolder holder, int position) {
         GithubModel repo = repos.get(position);
         holder.binding.getRoot().setOnClickListener(v -> {
-            Bundle bundle = new Bundle();
-            bundle.putLong("repoPk", repo.primaryKey);
+            GithubViewModel githubModel = new ViewModelProvider(ApplicationHelper.getCurrentActivity()).get(GithubViewModel.class);
+            githubModel.setSelected(repo);
             DetailFragment fragment = new DetailFragment();
-            fragment.setArguments(bundle);
             ApplicationHelper.getCurrentActivity().updateFragment(fragment);
         });
         holder.binding.repoName.setText(repo.name);

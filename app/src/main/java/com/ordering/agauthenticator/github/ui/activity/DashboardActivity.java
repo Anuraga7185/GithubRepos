@@ -3,6 +3,8 @@ package com.ordering.agauthenticator.github.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.ordering.agauthenticator.ApplicationHelper;
@@ -10,7 +12,7 @@ import com.ordering.agauthenticator.github.ui.fragment.HomeFragment;
 import com.ordering.agauthenticator.databinding.MainActivityBinding;
 import com.ordering.agauthenticator.github.viewmodel.GithubViewModel;
 
-public class DashboardActiivity extends GenericActivity {
+public class DashboardActivity extends GenericActivity {
 
     private MainActivityBinding binding;
     public GithubViewModel githubViewModel;
@@ -29,7 +31,19 @@ public class DashboardActiivity extends GenericActivity {
         githubViewModel = new ViewModelProvider(this).get(GithubViewModel.class);
 
         ApplicationHelper.setCurrentActivity(this);
-        updateFragment(new HomeFragment());
+        firstFragment(new HomeFragment());
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                if (fragmentManager.getBackStackEntryCount() > 0) {
+                    fragmentManager.popBackStack();
+                } else {
+                    finish();
+                }
+            }
+        });
     }
 
     @Override
@@ -43,4 +57,5 @@ public class DashboardActiivity extends GenericActivity {
     public int getFragmentContainer() {
         return binding.frameLayout.getId();
     }
+
 }

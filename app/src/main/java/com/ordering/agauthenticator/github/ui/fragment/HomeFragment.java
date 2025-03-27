@@ -1,11 +1,14 @@
 package com.ordering.agauthenticator.github.ui.fragment;
 
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ordering.agauthenticator.ApplicationHelper;
 import com.ordering.agauthenticator.R;
+import com.ordering.agauthenticator.github.helper.NetworkChangeReceiver;
 import com.ordering.agauthenticator.github.ui.adapter.RepoAdapter;
 import com.ordering.agauthenticator.databinding.DashboardLayoutGitBinding;
 import com.ordering.agauthenticator.github.db.GithubModel;
@@ -30,6 +34,11 @@ public class HomeFragment extends Fragment {
     private DashboardLayoutGitBinding binding;
     private RepoAdapter adapter;
     public GithubViewModel githubViewModel;
+    private NetworkChangeReceiver networkChangeReceiver;
+
+    public boolean isNetworkAvailable = true;
+    public GitHubRepository repository = new GitHubRepository();
+
 
     @Nullable
     @Override
@@ -38,6 +47,7 @@ public class HomeFragment extends Fragment {
         binding = DashboardLayoutGitBinding.bind(view);
 
         githubViewModel = new ViewModelProvider(this).get(GithubViewModel.class);
+        networkChangeReceiver = new NetworkChangeReceiver(binding, isNetworkAvailable -> HomeFragment.this.isNetworkAvailable = isNetworkAvailable);
 
 
         setAdapter();
@@ -77,10 +87,12 @@ public class HomeFragment extends Fragment {
 
     }
 
-    GitHubRepository repository = new GitHubRepository();
-
     private void fetchSelfRepos() {
-
+        if (!isNetworkAvailable) {
+            List<GithubModel> repos = (githubViewModel != null && githubViewModel.getAllRepos().getValue() != null) ? githubViewModel.getAllRepos().getValue() : new ArrayList<>();
+            updateUserRepos(repos);
+            return;
+        }
         // Fetch User Repositories
         repository.fetchUserRepos(new NetworkCallback<>() {
             @Override
@@ -113,6 +125,9 @@ public class HomeFragment extends Fragment {
 
 
     private void searchAction() {
+        if (!isNetworkAvailable) {
+            Toast.makeText(requireContext(), "Cannot Fetch Data, Network Erro!!", Toast.LENGTH_LONG).show();
+        }
         binding.search.setOnSearchClickListener(v -> binding.textHeader.setVisibility(View.GONE));
 
         binding.search.setOnCloseListener(() -> {
@@ -129,7 +144,9 @@ public class HomeFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                searchRepos(newText);
+                if (newText != null && newText.trim().length() > 3) {
+                    searchRepos(newText);
+                }
                 return false;
             }
         });
@@ -144,6 +161,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void updateUserRepos(List<GithubModel> selfRepos) {
+
         binding.progressBar.setVisibility(View.GONE);
         binding.overlay.setVisibility(View.GONE);
         binding.swipeRefresh.setRefreshing(false);
@@ -154,5 +172,24 @@ public class HomeFragment extends Fragment {
         selfRepos.forEach(githubModel -> {
             githubViewModel.insertRepo(githubModel);
         });
+
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (binding.search.isIconified()) {
+            binding.textHeader.setVisibility(View.VISIBLE);
+        } else {
+            binding.textHeader.setVisibility(View.GONE);
+        }
+        requireContext().registerReceiver(networkChangeReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        requireContext().unregisterReceiver(networkChangeReceiver);
     }
 }

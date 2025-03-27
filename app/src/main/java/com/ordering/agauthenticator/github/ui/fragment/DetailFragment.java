@@ -22,25 +22,21 @@ public class DetailFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DetailLayoutBinding.inflate(inflater, container, false);
 
-        setDatatoUI();
+        setDataToUI();
+
         return binding.getRoot();
     }
 
-    private void setDatatoUI() {
-        if (getArguments() == null) {
-            return;
-        }
+    private void setDataToUI() {
         GithubViewModel githubViewModel = new ViewModelProvider(requireActivity()).get(GithubViewModel.class);
-
-        long pk = getArguments().getLong("repoPk");
-        githubViewModel.getRepoByPK(pk, this::setRepoData);
+        setRepoData(githubViewModel.getSelected());
     }
 
     private void setRepoData(GithubModel githubModel) {
-        binding.description.setText(githubModel.description == null ? "No Description" : githubModel.description);
-        binding.owner.setText(githubModel.owner == null ? "No Owner" : githubModel.owner.login);
-        binding.repoName.setText(githubModel.name == null ? "No RepoName" : githubModel.name);
-        binding.usages.setText(githubModel.topics == null ? "No usages" : githubModel.topics.stream().reduce("", (a, b) -> a + b));
-        binding.starred.setText( String.valueOf(githubModel.watchers_count));
+        binding.description.setText(githubModel == null || githubModel.description == null ? "No Description" : githubModel.description);
+        binding.owner.setText(githubModel == null || githubModel.owner == null ? "No Owner" : githubModel.owner.login);
+        binding.repoName.setText(githubModel == null || githubModel.name == null ? "No RepoName" : githubModel.name);
+        binding.usages.setText(githubModel == null || githubModel.topics == null || githubModel.topics.isEmpty() ? "No usages" : String.join(", ", githubModel.topics));
+        binding.starred.setText(String.valueOf(githubModel == null ? 0 : githubModel.watchers_count));
     }
 }

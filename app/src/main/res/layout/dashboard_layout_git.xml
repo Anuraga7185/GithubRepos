@@ -2,23 +2,33 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <!-- SwipeRefreshLayout -->
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
         <!-- Main Content -->
         <LinearLayout
             android:id="@+id/main_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#55D3D1D1"
-            android:orientation="vertical"
-            android:padding="7dp">
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/noInternetLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#940808"
+                android:padding="10dp"
+                android:text="No Internet Connection!"
+                android:textColor="@color/white" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="7dp"
                 android:gravity="end|center_vertical"
                 android:orientation="horizontal">
 
@@ -30,7 +40,8 @@
                     android:text="Github Repository"
                     android:textColor="@android:color/black"
                     android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:visibility="invisible" />
 
                 <SearchView
                     android:id="@+id/search"
@@ -52,6 +63,7 @@
                 android:id="@+id/recyler"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginHorizontal="7dp"
                 android:layout_marginTop="15dp"
                 android:visibility="visible" />
 

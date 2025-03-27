@@ -77,7 +77,7 @@ public class MainActivity extends GenericActivity {
     }
 
     private void moveToDashboard() {
-        Intent intent = new Intent(this, DashboardActiivity.class);
+        Intent intent = new Intent(this, DashboardActivity.class);
         startActivity(intent);
         finish();
     }

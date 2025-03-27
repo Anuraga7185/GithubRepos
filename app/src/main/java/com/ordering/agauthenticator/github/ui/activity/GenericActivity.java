@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 public class GenericActivity extends AppCompatActivity {
+    public Fragment currentFragment = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -14,7 +15,13 @@ public class GenericActivity extends AppCompatActivity {
     }
 
     public void updateFragment(Fragment fragment) {
+        currentFragment = fragment;
         getSupportFragmentManager().beginTransaction().replace(getFragmentContainer(), fragment).addToBackStack(fragment.getClass().getName()).commit();
+    }
+
+    public void firstFragment(Fragment fragment) {
+        currentFragment = fragment;
+        getSupportFragmentManager().beginTransaction().add(getFragmentContainer(), fragment).commit();
     }
 
     public int getFragmentContainer() {

@@ -16,7 +16,7 @@ public class GithubModel {
 
     public String name;
     public String description;
-
+    public double id;
     @Ignore
     public Owner owner;
     @Ignore

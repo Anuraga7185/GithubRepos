@@ -15,7 +15,7 @@ import java.util.concurrent.Executors;
 
 public class GithubViewModel extends AndroidViewModel {
     private final GithubDatabase githubDatabase;
-
+    private GithubModel githubModel = null;
     public MutableLiveData<List<GithubModel>> repos = new MutableLiveData<>();
 
     public GithubViewModel(@NonNull Application application) {
@@ -33,6 +33,14 @@ public class GithubViewModel extends AndroidViewModel {
         return repos;
     }
 
+    public void setSelected(GithubModel repos) {
+        this.githubModel = repos;
+    }
+
+    public GithubModel getSelected() {
+        return this.githubModel;
+    }
+
     public void setRepos(List<GithubModel> repos) {
         this.repos.setValue(repos);
     }
@@ -44,6 +52,11 @@ public class GithubViewModel extends AndroidViewModel {
     public void getRepoByPK(long pk, DATA_CALLBACK dataCallback) {
         Executors.newSingleThreadExecutor().execute(() ->
                 dataCallback.onSuccess(githubDatabase.githubDao().getRepo(pk)));
+    }
+
+    public void getRepoById(double repoId, DATA_CALLBACK dataCallback) {
+        Executors.newSingleThreadExecutor().execute(() ->
+                dataCallback.onSuccess(githubDatabase.githubDao().getRepoById(repoId)));
     }
 
     public void deleteRepos() {
