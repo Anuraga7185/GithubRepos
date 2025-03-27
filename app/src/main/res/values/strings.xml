@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">AG Authenticator</string>
+    <string name="signin_with_google">Signin with Google</string>
+    <string name="github_repository">Github Repository</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="no_data_found">No User\'s Repo Found!!</string>
+</resources>

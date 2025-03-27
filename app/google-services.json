@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "788983845495",
+    "project_id": "ag-authenticator",
+    "storage_bucket": "ag-authenticator.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:788983845495:android:aad4549f228bf86032ec72",
+        "android_client_info": {
+          "package_name": "com.ordering.agauthenticator"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAM2WJttGtLGhB2JJo7pK63SY-WiK6fVs4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
